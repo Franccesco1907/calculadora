@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: calculadora
+  name: calculadora
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: calculadora
+  template:
+    metadata:
+      labels:
+        app: calculadora
+    spec:
+      containers:
+        - image: icr.io/calculadora/calculadora:1.0.0
+          imagePullPolicy: Always
+          name: calculadora
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+      imagePullSecrets:
+        - name: all-icr-io
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: calculadora
+  labels:
+    app: calculadora
+spec:
+  selector:
+    app: calculadora
+  type: NodePort
+  ports:
+    - port: 8080
